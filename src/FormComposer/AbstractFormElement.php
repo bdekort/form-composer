@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -24,32 +25,37 @@
  * THE SOFTWARE.
  */
 
-namespace LengthOfRope\FormComposer\Interfaces;
+namespace LengthOfRope\FormComposer;
 
 /**
+ * Description of Form
  *
  * @author LengthOfRope, Bas de Kort <bdekort@gmail.com>
  */
-interface IFormElement
+abstract class AbstractFormElement implements Interfaces\IFormElement
 {
     /**
      * Add a form element
      * 
      * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
+     * @return \LengthOfRope\FormComposer\IFormElement
      */
-    public function add(IFormElement $element);
-    
+    public function add(Interfaces\IFormElement $element)
+    {
+        return $this;
+    }
+
     /**
      * Remove a form element
      * 
      * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
+     * @return \LengthOfRope\FormComposer\IFormElement
      */
-    public function remove(IFormElement $element);
-    
-    /**
-     * Validate the current element and all it's children
-     * 
-     * @return boolean
-     */
-    public function validate();
+    public function remove(Interfaces\IFormElement $element)
+    {
+        return $this;
+    }
+
+
+    abstract public function validate();
 }

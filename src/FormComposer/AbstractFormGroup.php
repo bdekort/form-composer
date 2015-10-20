@@ -24,32 +24,64 @@
  * THE SOFTWARE.
  */
 
-namespace LengthOfRope\FormComposer\Interfaces;
+namespace LengthOfRope\FormComposer;
 
 /**
+ * Description of Form
  *
  * @author LengthOfRope, Bas de Kort <bdekort@gmail.com>
  */
-interface IFormElement
+abstract class AbstractFormGroup implements Interfaces\IFormElement
 {
+    /** @var Interfaces\IFormElement[] */
+    protected $elements;
+    
+    public function __construct()
+    {
+        $this->elements = new \SplObjectStorage();
+    }
+    
     /**
      * Add a form element
      * 
      * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
+     * @return \LengthOfRope\FormComposer\IFormElement
      */
-    public function add(IFormElement $element);
-    
+    public function add(Interfaces\IFormElement $element)
+    {
+        $this->elements->attach($element);
+        
+        return $this;
+    }
+
     /**
      * Remove a form element
      * 
      * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
+     * @return \LengthOfRope\FormComposer\IFormElement
      */
-    public function remove(IFormElement $element);
-    
+    public function remove(Interfaces\IFormElement $element)
+    {
+        if ($this->elements->contains($element)) {
+            $this->elements->detach($element);
+        }
+        
+        return $this;
+    }
+
     /**
-     * Validate the current element and all it's children
+     * Validate all children
      * 
      * @return boolean
      */
-    public function validate();
+    public function validate()
+    {
+        foreach($this->elements as $element) {
+            if (!$element->validate()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 }
