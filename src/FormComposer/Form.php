@@ -24,39 +24,56 @@
  * THE SOFTWARE.
  */
 
-namespace LengthOfRope\FormComposer\Interfaces;
+namespace LengthOfRope\FormComposer;
 
 /**
+ * Description of Form
  *
  * @author LengthOfRope, Bas de Kort <bdekort@gmail.com>
  */
-interface IFormElement
+class Form extends Groups\AbstractGroup
 {
-    /**
-     * Add a form element
-     * 
-     * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
-     */
-    public function add(IFormElement $element);
+    protected $id = '';
+    protected $method = 'POST';
     
     /**
-     * Remove a form element
+     * Factory for Form to enable chaining.
      * 
-     * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
+     * @param string $id The id for the form
+     * 
+     * @return \LengthOfRope\FormComposer\Form
      */
-    public function remove(IFormElement $element);
+    public static function factory($id)
+    {
+        return new Form($id);
+    }
     
-    /**
-     * Validate the current element and all it's children
-     * 
-     * @return boolean
-     */
-    public function validate();
+    public function __construct($id)
+    {
+        $this->id = $id;
+        parent::__construct();
+    }
+    
+    public function setMethod($method = 'POST')
+    {
+        $this->method = $method;
+    }
     
     /**
      * Retrieve the elements (and all childrens) html output
      * 
      * @return string
      */
-    public function getHTML();
+    public function getHTML()
+    {
+        $return = sprintf("<form method='%s'", $this->method);
+        
+        foreach($this->elements as $element) {
+            $return .= $element->getHTML();
+        }
+        
+        $return .= "</form>";
+        
+        return $return;
+    }
 }

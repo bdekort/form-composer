@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -24,23 +25,16 @@
  * THE SOFTWARE.
  */
 
-namespace LengthOfRope\FormComposer;
+namespace LengthOfRope\FormComposer\Elements;
+use LengthOfRope\FormComposer\Interfaces;
 
 /**
  * Description of Form
  *
  * @author LengthOfRope, Bas de Kort <bdekort@gmail.com>
  */
-abstract class AbstractFormGroup implements Interfaces\IFormElement
+abstract class AbstractElement implements Interfaces\IFormElement
 {
-    /** @var Interfaces\IFormElement[] */
-    protected $elements;
-    
-    public function __construct()
-    {
-        $this->elements = new \SplObjectStorage();
-    }
-    
     /**
      * Add a form element
      * 
@@ -49,8 +43,6 @@ abstract class AbstractFormGroup implements Interfaces\IFormElement
      */
     public function add(Interfaces\IFormElement $element)
     {
-        $this->elements->attach($element);
-        
         return $this;
     }
 
@@ -62,26 +54,6 @@ abstract class AbstractFormGroup implements Interfaces\IFormElement
      */
     public function remove(Interfaces\IFormElement $element)
     {
-        if ($this->elements->contains($element)) {
-            $this->elements->detach($element);
-        }
-        
         return $this;
-    }
-
-    /**
-     * Validate all children
-     * 
-     * @return boolean
-     */
-    public function validate()
-    {
-        foreach($this->elements as $element) {
-            if (!$element->validate()) {
-                return false;
-            }
-        }
-        
-        return true;
     }
 }
