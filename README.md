@@ -1,2 +1,2 @@
-# form-composer
-A small PHP library to generate and validate forms
+# Form Composer
+A small independent PHP library to easily generate and validate forms
