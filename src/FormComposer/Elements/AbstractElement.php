@@ -35,11 +35,27 @@ use LengthOfRope\FormComposer\Interfaces;
  */
 abstract class AbstractElement implements Interfaces\IFormElement
 {
+    private $label = '';
+    private $required = false;
+    private $id = false;
+    private $placeholder = false;
+    private $name = '';
+    
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+    
+    public static function factory($name)
+    {
+        return new static($name);
+    }
+    
     /**
      * Add a form element
      * 
      * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
-     * @return \LengthOfRope\FormComposer\IFormElement
+     * @return \LengthOfRope\FormComposer\Elements\AbstractElement
      */
     public function add(Interfaces\IFormElement $element)
     {
@@ -50,10 +66,114 @@ abstract class AbstractElement implements Interfaces\IFormElement
      * Remove a form element
      * 
      * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
-     * @return \LengthOfRope\FormComposer\IFormElement
+     * @return \LengthOfRope\FormComposer\Elements\AbstractElement
      */
     public function remove(Interfaces\IFormElement $element)
     {
         return $this;
+    }
+    
+    /**
+     * Set the elements label text
+     * @param string $label
+     */
+    public function label($label)
+    {
+        $this->label = $label;
+        
+        return $this;
+    }
+    
+    /**
+     * Set the required flag
+     * 
+     * @param bool $required
+     * @return \LengthOfRope\FormComposer\Elements\AbstractElement
+     */
+    public function required($required = false)
+    {
+        $this->required = ($required === true);
+        
+        return $this;
+    }
+    
+    /**
+     * Check if required
+     * @return boolean
+     */
+    protected function isRequired()
+    {
+        return $this->required;
+    }
+    
+    /**
+     * Set an id for this element
+     * 
+     * @param string $id
+     * @return \LengthOfRope\FormComposer\Elements\AbstractElement
+     */
+    public function id($id = false)
+    {
+        $this->id = $id;
+        
+        return $this;
+    }
+    
+    /**
+     * Set a placeholder for this element
+     * 
+     * @param string $placeholder
+     * @return \LengthOfRope\FormComposer\Elements\AbstractElement
+     */
+    public function placeholder($placeholder = false)
+    {
+        $this->placeholder = $placeholder;
+        
+        return $this;
+    }
+    
+    /**
+     * Get the base elements attribute string
+     * 
+     * @return string
+     */
+    public function getBaseAttributes()
+    {
+        $return = '';
+        if ($this->id) {
+            $return .= sprintf(' id="%s"', $this->id);
+        }
+        
+        if ($this->required !== false) {
+            $return .= ' required="required"';
+        }
+
+        if ($this->placeholder !== false) {
+            $return .= sprintf(' placeholder="%s"', $this->placeholder);
+        }
+        return trim($return);
+    }
+    
+    /**
+     * Get the name value
+     * 
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * Get the user value
+     * 
+     * @return mixed
+     */
+    public function getValue()
+    {
+        if (isset($_REQUEST[$this->getName()])) {
+            return $_REQUEST[$this->getName()];
+        }
+        return '';
     }
 }

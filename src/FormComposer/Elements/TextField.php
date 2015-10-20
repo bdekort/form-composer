@@ -24,50 +24,27 @@
  * THE SOFTWARE.
  */
 
-namespace LengthOfRope\FormComposer\Groups;
-use LengthOfRope\FormComposer\Interfaces;
+namespace LengthOfRope\FormComposer\Elements;
 
 /**
- * Description of Form
+ * Description of TextField
  *
  * @author LengthOfRope, Bas de Kort <bdekort@gmail.com>
  */
-abstract class AbstractGroup implements Interfaces\IFormElement
+class TextField extends AbstractElement
 {
-    /** @var Interfaces\IFormElement[] */
-    protected $elements;
-    
-    public function __construct()
-    {
-        $this->elements = new \SplObjectStorage();
-    }
-    
     /**
-     * Add a form element
+     * Retrieve the elements (and all childrens) html output
      * 
-     * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
-     * @return \LengthOfRope\FormComposer\Groups\AbstractGroup
+     * @return string
      */
-    public function add(Interfaces\IFormElement $element)
+    public function getHTML()
     {
-        $this->elements->attach($element);
-        
-        return $this;
-    }
-
-    /**
-     * Remove a form element
-     * 
-     * @param \LengthOfRope\FormComposer\Interfaces\IFormElement $element
-     * @return \LengthOfRope\FormComposer\Groups\AbstractGroup
-     */
-    public function remove(Interfaces\IFormElement $element)
-    {
-        if ($this->elements->contains($element)) {
-            $this->elements->detach($element);
-        }
-        
-        return $this;
+        return '<input ' . 
+            $this->getBaseAttributes() . 
+            ' type="text"'.
+            ' value="' . htmlentities($this->getValue(), ENT_QUOTES) . '"'.
+            ' name="' . $this->getName() . '" />';
     }
 
     /**
@@ -77,12 +54,11 @@ abstract class AbstractGroup implements Interfaces\IFormElement
      */
     public function validate()
     {
-        foreach($this->elements as $element) {
-            if (!$element->validate()) {
-                return false;
-            }
+        if (!$this->isRequired()) {
+            return true;
         }
         
-        return true;
+        return (strlen($this->getValue()) > 0);
     }
+
 }

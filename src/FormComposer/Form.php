@@ -66,7 +66,7 @@ class Form extends Groups\AbstractGroup
      */
     public function getHTML()
     {
-        $return = sprintf("<form method='%s'", $this->method);
+        $return = sprintf("<form method='%s'>", $this->method);
         
         foreach($this->elements as $element) {
             $return .= $element->getHTML();
